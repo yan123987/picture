@@ -3,7 +3,7 @@ import numpy as np
 
 #边缘处理
 def edge_demo(image):
-    #高斯滤波，将图像变得模糊一点
+    #高斯滤波，将图像变得模糊一点，降噪
     blurred = cv.GaussianBlur(image, (3, 3), 0)
     #转为灰度图像
     gray = cv.cvtColor(blurred, cv.COLOR_BGR2GRAY)
