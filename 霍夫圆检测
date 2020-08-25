@@ -1,0 +1,26 @@
+import cv2 as cv
+import numpy as np
+
+#在检测之前需要进行噪声的消除。可以高斯滤波，平滑滤波，但是参数调整不当会有问题
+def detect_circles_demo(image):#霍夫圆检测
+    dst = cv.pyrMeanShiftFiltering(image, 10, 100)
+    #消除噪声，很重要（这个函数严格来说并不是图像的分割，而是图像在色彩层面的平滑滤波，
+    # 它可以中和色彩分布相近的颜色，平滑色彩细节，侵蚀掉面积较小的颜色区域）
+    cimage = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
+    #调用霍夫圆检测
+    circles = cv.HoughCircles(cimage, cv.HOUGH_GRADIENT, 1, 20, param1=50, param2=30, minRadius=0, maxRadius=0)
+    circles = np.uint16(np.around(circles))
+    for i in circles[0, :]:
+        cv.circle(image, (i[0], i[1]), i[2], (0, 0, 255), 2)
+        cv.circle(image, (i[0], i[1]), 2, (255, 0, 0), 2)
+    cv.imshow("circles", image)
+
+
+print("--------- Python OpenCV Tutorial ---------")
+src = cv.imread(r"C:\Users\www\Desktop\videos\contours.png")
+cv.namedWindow("input image", cv.WINDOW_AUTOSIZE)
+cv.imshow("input image", src)
+detect_circles_demo(src)
+cv.waitKey(0)
+
+cv.destroyAllWindows()
